@@ -1,0 +1,14 @@
+:host {
+  @apply(--hbs-font-common-base);
+
+  display: block;
+}
+
+.paper-header {
+  background-color: #fff;
+}
+
+h1 {
+  font-size: 1.5rem;
+  text-align: center;
+}

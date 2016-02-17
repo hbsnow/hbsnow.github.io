@@ -1,0 +1,24 @@
+link(rel='import',href='../../bower_components/polymer/polymer.html')
+link(rel='import',href='../hbs-about/hbs-about.html')
+link(rel='import',href='../hbs-aside/hbs-aside.html')
+link(rel='import',href='../hbs-footer/hbs-footer.html')
+link(rel='import',href='../hbs-header/hbs-header.html')
+link(rel='import',href='../hbs-works/hbs-works.html')
+link(rel='import',href='../hbs-styles/hbs-styles.html')
+
+dom-module#hbs-body
+  template
+    style(is='custom-style')
+      include hbs-body.css
+
+    #main-container
+      hbs-header
+
+      main
+        hbs-about
+        hbs-aside
+        hbs-works
+
+      hbs-footer
+
+  script(src='hbs-body.js')

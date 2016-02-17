@@ -1,0 +1,34 @@
+link(rel='import',href='../../bower_components/polymer/polymer.html')
+link(rel='import',href='../../bower_components/iron-flex-layout/iron-flex-layout.html')
+link(rel='import',href='../../bower_components/iron-icon/iron-icon.html')
+link(rel='import',href='../../bower_components/iron-media-query/iron-media-query.html')
+link(rel='import',href='../../bower_components/paper-button/paper-button.html')
+link(rel='import',href='../../bower_components/paper-material/paper-material.html')
+link(rel='import',href='../hbs-container/hbs-container.html')
+link(rel='import',href='../hbs-styles/hbs-styles.html')
+link(rel='import',href='../hbs-svg-icons/hbs-svg-icons.html')
+
+dom-module#hbs-about
+  template
+    style(is='custom-style')
+      include hbs-about.css
+
+    iron-media-query(query='{{querySmall}}',query-matches='{{condensedSmall}}')
+    iron-media-query(query='{{queryMedium}}',query-matches='{{condensedMedium}}')
+
+    hbs-container
+      #about-container(small-media$='{{condensedSmall}}',medium-media$='{{condensedMedium}}')
+        .about-item#avatar
+          paper-material#avatar-cover(elevation='1')
+            iron-icon#avatar-icon(icon='avatars:hbsnow')
+
+        .about-item#profile
+          #profile-container
+            a.profile-item(href='https://github.com/hbsnow',tabindex='-1',target='_blank')
+              paper-button#github(raised) GitHub
+            a.profile-item(href='https://twitter.com/hbsnow',tabindex='-1',target='_blank')
+              paper-button#twitter(raised) Twitter
+            a.profile-item(href='http://qiita.com/hbsnow',tabindex='-1',target='_blank')
+              paper-button#email(raised) Qiita
+
+  script(src='hbs-about.js')

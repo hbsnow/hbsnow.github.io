@@ -1,0 +1,33 @@
+link(rel='import',href='../../bower_components/polymer/polymer.html')
+link(rel='import',href='../../bower_components/iron-flex-layout/iron-flex-layout.html')
+link(rel='import',href='../../bower_components/iron-icons/iron-icons.html')
+link(rel='import',href='../../bower_components/paper-card/paper-card.html')
+link(rel='import',href='../../bower_components/paper-icon-button/paper-icon-button.html')
+link(rel='import',href='../hbs-container/hbs-container.html')
+link(rel='import',href='../hbs-styles/hbs-styles.html')
+
+dom-module#hbs-works
+  template
+    style(is='custom-style')
+      include hbs-works.css
+
+    iron-media-query(query='{{querySmall}}',query-matches='{{condensedSmall}}')
+
+    hbs-container
+      #works-container(small-media$='{{condensedSmall}}')
+        paper-card(image='/images/fuji-kkk.png')
+          .card-container
+            .card-content
+              .card-category ウェブサイト制作
+              .card-title フジ機材工業株式会社
+
+            a(href='http://fuji-kkk.co.jp/',target='_blank')
+              paper-icon-button(icon='home')
+
+        paper-card(image='/images/pesante.png')
+          .card-container
+            .card-content
+              .card-category ウェブデザイン制作
+              .card-title FC2 公式テンプレート pesante
+
+  script(src='hbs-works.js')

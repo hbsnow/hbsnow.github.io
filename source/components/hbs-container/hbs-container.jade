@@ -1,0 +1,17 @@
+link(rel='import',href='../../bower_components/polymer/polymer.html')
+link(rel='import',href='../../bower_components/iron-media-query/iron-media-query.html')
+link(rel='import',href='../hbs-styles/hbs-styles.html')
+
+dom-module#hbs-container
+  template
+    style(is='custom-style')
+      include hbs-container.css
+
+    iron-media-query(query='{{querySmall}}',query-matches='{{condensedSmall}}')
+    iron-media-query(query='{{queryMedium}}',query-matches='{{condensedMedium}}')
+
+    #container(small-media$='{{condensedSmall}}',medium-media$='{{condensedMedium}}')
+      #containerContent
+        content
+
+  script(src='hbs-container.js')

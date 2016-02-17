@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  background-color: var(--paper-grey-900);
+  color: rgba(255,255,255,var(--dark-primary-opacity));
+  overflow: hidden;
+}
+
+p {
+  font-size: 1rem;
+}
+
+#tagline {
+  margin-bottom: 2rem;
+}
+
+#view-source {
+  text-align: center;
+}
+
+#view-source a {
+  color: rgba(255,255,255,var(--dark-primary-opacity));
+}
+
+#view-source paper-button {
+  min-width: 12rem;
+  background-color: var(--paper-grey-800);
+}
+
+#view-source iron-icon {
+  margin-right: 1rem;
+}

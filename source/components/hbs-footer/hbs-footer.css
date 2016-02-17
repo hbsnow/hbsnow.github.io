@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  background-color: #fff;
+  border-top: 1px solid rgba(0,0,0,var(--light-divider-opacity));
+}
+
+p {
+  font-size: 1rem;
+}
+
+#copyright {
+  text-align: center;
+}
+
+

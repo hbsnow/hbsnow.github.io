@@ -1,0 +1,15 @@
+link(rel='import',href='../../bower_components/polymer/polymer.html')
+link(rel='import',href='../hbs-container/hbs-container.html')
+link(rel='import',href='../hbs-styles/hbs-styles.html')
+
+dom-module#hbs-footer
+  template
+    style(is='custom-style')
+      include hbs-footer.css
+
+    hbs-container
+      footer
+        #copyright
+          p &copy; {{year}}
+
+  script(src='hbs-footer.js')
