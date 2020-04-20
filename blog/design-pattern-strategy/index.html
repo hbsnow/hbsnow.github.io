@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"><meta charset="utf-8"><link rel="canonical" href="https://hbsnow.github.io/blog/design-pattern-strategy/"><meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1"><link rel="author" href="/assets/humans.txt"><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/blog/feed.xml"><meta name="author" content="hbsnow"><meta name="description" content="GoFのデザインパターンのうちの一つである「Strategy パターン」についての学習メモ。"><meta name="keywords" content="Design pattern"><title>デザインパターンの学習メモ「Strategy パターン」 | hbsnow.github.io</title><script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","headline":"デザインパターンの学習メモ「Strategy パターン」 | hbsnow.github.io","publisher":{"@type":"Organization","name":"hbsnow","logo":{"@type":"ImageObject","height":60,"width":600}},"description":"GoFのデザインパターンのうちの一つである「Strategy パターン」についての学習メモ。"}</script><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@hbsnow"><meta property="og:title" content="デザインパターンの学習メモ「Strategy パターン」 | hbsnow.github.io"><meta property="og:type" content="article"><meta property="og:image" content="/assets/logo.png"><meta property="og:url" content="https://hbsnow.github.io/blog/design-pattern-strategy/"><meta property="og:description" content="GoFのデザインパターンのうちの一つである「Strategy パターン」についての学習メモ。"><meta property="og:site_name" content="hbsnow.github.io"><script async src="/assets/js/main.js"></script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700&amp;text=hbsnow"><link rel="stylesheet" href="/assets/css/main.css"></head><body><div class="layout"><header class="layout__header"><div class="header" id="header"><h1 class="header__title"><a class="header__link" href="/">hbsnow</a></h1></div></header><main class="layout__main"><div class="main"><header class="main__header"><div class="content-header"><div class="container"><h1 class="content-header__title" id="content-title">デザインパターンの学習メモ「Strategy パターン」</h1><div class="content-header__metadata"><div class="content-header__date"><span class="content-header__data"><time class="content-header__published" datetime="2018-09-27">2018-09-27</time></span><hr class="content-header__sepalate"><span class="content-header__data"><time class="content-header__modified" datetime="2019-05-04">2019-05-04</time>
+に更新</span></div></div></div></div></header><div class="main__body"><div class="content-body"><div class="container"><p>GoF のデザインパターンのうちの一つ、Strategy パターンについて PHP のサンプルコードを交えて学習していきます。</p>
+<p>Strategy パターンは、<a href="https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">Wikipedia では以下のように解説</a>されています。</p>
+<blockquote>
+<p>Strategy パターンは、コンピュータープログラミングの領域において、アルゴリズムを実行時に選択することができるデザインパターンである。</p>
+</blockquote>
+<p>この一文ではわかりにくいのですが、Strategy パターンの目的についての解説は比較的わかりやすいかもしれません。</p>
+<blockquote>
+<p>Strategy パターンは、アプリケーションで使用されるアルゴリズムを動的に切り替える必要がある際に有用である。Strategy パターンはアルゴリズムのセットを定義する方法を提供し、これらを交換可能にすることを目的としている。Strategy パターンにより、アルゴリズムを使用者から独立したまま様々に変化させることができるようになる。</p>
+</blockquote>
+<p>実際に Strategy パターンがどういうものなのかを、サンプルコードを用いながら考えていきます。</p>
+<h2>Strategy パターンを使用しない例</h2>
+<p>ゲームの敵をサンプルとして用います。</p>
+<div class="codeblock"><div class="codeblock__title">php</div><pre class="codeblock__content php"><code class="codeblock__code codeblock__code--php">&lt;?php
+declare(strict_types=1);
+
+interface Walkable
+{
+    public function walk(): string;
+}
+
+interface Flyable
+{
+    public function fly(): string;
+}
+
+class Monster
+{
+}
+
+class Slime extends Monster implements Walkable
+{
+    public function walk(): string
+    {
+        return 'ゆっくり歩く';
+    }
+}
+
+class Goblin extends Monster implements Walkable
+{
+    public function walk(): string
+    {
+        return '歩く';
+    }
+}
+
+class Dragon extends Monster implements Walkable, Flyable
+{
+    public function walk(): string
+    {
+        return '歩く';
+    }
+
+    public function fly(): string
+    {
+        return '飛ぶ';
+    }
+}
+
+$Slime = new Slime();
+$Goblin = new Goblin();
+$Dragon = new Dragon();
+
+echo &lt;&lt;&lt; EOT
+Slime
+{$Slime-&gt;walk()}
+
+Goblin
+{$Goblin-&gt;walk()}
+
+Dragon
+{$Dragon-&gt;walk()}
+{$Dragon-&gt;fly()}
+EOT;
+</code></pre>
+</div>
+<p>Monser という具象クラスがあって、それぞれのモンスター</p>
+<ul>
+<li>Slime (ゆっくり歩ける)</li>
+<li>Goblin (歩ける)</li>
+<li>Dragon (歩ける・飛べる)</li>
+</ul>
+<p>は Monser クラスを継承しています。モンスターの行動「歩く」と「飛ぶ」についてはインターフェースを作成してそれぞれの継承先のクラスに実装しました。</p>
+<p>問題はインターフェースが実装をもたないことから、Goblin と Dragon の「歩く」という同じコードの再利用ができていないために保守性が損なわれています。</p>
+<h2>Strategy パターンを使用する例</h2>
+<div class="codeblock"><div class="codeblock__title">php</div><pre class="codeblock__content php"><code class="codeblock__code codeblock__code--php">&lt;?php
+declare(strict_types=1);
+
+interface WalkInterface
+{
+    public function walk();
+}
+
+class NormalWalk implements WalkInterface
+{
+    public function walk()
+    {
+        return &quot;歩く&quot;;
+    }
+}
+
+class SlowWalk implements WalkInterface
+{
+    public function walk()
+    {
+        return &quot;ゆっくり歩く&quot;;
+    }
+}
+
+interface FlyInterface
+{
+    public function fly();
+}
+
+class NormalFly implements FlyInterface
+{
+    public function fly()
+    {
+        return &quot;飛ぶ&quot;;
+    }
+}
+
+class NoFly implements FlyInterface
+{
+    public function fly()
+    {
+        // 飛べないので何もしない
+    }
+}
+
+class Monster
+{
+    private $walkBehavior;
+    private $flyBehavior;
+
+    public function __construct(
+        WalkInterface $walkBehavior,
+        FlyInterface $flyBehavior
+    ) {
+        $this-&gt;walkBehavior = $walkBehavior;
+        $this-&gt;flyBehavior = $flyBehavior;
+    }
+
+    public function walk()
+    {
+        return $this-&gt;walkBehavior-&gt;walk();
+    }
+
+    public function fly()
+    {
+        return $this-&gt;flyBehavior-&gt;fly();
+    }
+}
+
+class Goblin extends Monster
+{
+}
+
+class Slime extends Monster
+{
+}
+
+class Dragon extends Monster
+{
+}
+
+$normalWalk = new NormalWalk();
+$slowWalk = new SlowWalk();
+$normalFly = new NormalFly();
+$noFly = new NoFly();
+
+$Goblin = new Goblin($normalWalk, $noFly);
+$Slime = new Slime($slowWalk, $noFly);
+$Dragon = new Dragon($normalWalk, $normalFly);
+
+echo &lt;&lt;&lt; EOT
+Slime
+{$Slime-&gt;walk()}
+
+Goblin
+{$Goblin-&gt;walk()}
+
+Dragon
+{$Dragon-&gt;walk()}
+{$Dragon-&gt;fly()}
+EOT;
+</code></pre>
+</div>
+<p>上記のサンプルでは「歩く」と「飛ぶ」の 2 つの振る舞いに対してプログラミングしています。そのため例えばドラゴンをゆっくり歩かせたくなった場合、 <code>new Dragon($normalWalk, $normalFly)</code> とインスタンスの生成部分にある <code>$normalWalk</code> を <code>$slowWalk</code> と交換することにより変更が可能です。</p>
+<h2>開放/閉鎖原則</h2>
+<p>このパターンについては Open-Closed Principle (開放/閉鎖原則) を知っているとより理解しやすいかもしれません。開放/閉鎖原則は理解しにくいのですが、下記の動画がとてもわかりやすいのでおすすめです。</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=cUV1nXPfjFY">「SOLID の原則ってどんなふうに使うの？オープン・クローズドの原則編 拡大版」　 後藤英宣</a></li>
+</ul>
+</div></div></div></div></main><nav class="layout__menu"><div class="menu" id="menu"><div class="menu__icon" id="menu-icon"><a class="menu__link" href="/about/"><div class="svg-icon svg-icon--light"><svg class="svg-icon__svg svg-icon__svg--about" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path class="svg-icon__none" d="M0 0h24v24H0z"/>
+  <path class="svg-icon__fill" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"/>
+</svg>
+</div></a></div></div></nav><nav class="layout__nav"><div class="nav" id="nav"><div class="nav__icon" id="nav-icon"><a class="nav__link" href="/"><div class="svg-icon svg-icon--light svg-icon--nav"><svg class="svg-icon__svg svg-icon__svg--arrow" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path class="svg-icon__none" d="M0 0h24v24H0V0z"/>
+  <path class="svg-icon__fill" d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/>
+</svg>
+</div></a></div></div></nav><footer class="layout__footer"><div class="footer" id="footer"><div class="container"><div class="footer__items"><div class="footer__item footer__item--contact"><p>このサイト内の記事は <a href="/about/">hbsnow</a> が書いています。</p><p>何かご意見がございましたら、<a href="https://github.com/hbsnow/website/issues">GitHub の Issue</a> までご連絡ください。</p></div><div class="footer__item footer__item--sns"><div class="sns"><div class="sns__item"><a class="sns__link" href="https://github.com/hbsnow"><div class="sns__icon"><div class="svg-icon svg-icon--light"><svg class="svg-icon__svg svg-icon__svg--github" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path class="svg-icon__fill" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+</svg>
+</div></div><div class="sns__name">@hbsnow</div></a></div><div class="sns__item"><a class="sns__link" href="https://twitter.com/hbsnow"><div class="sns__icon"><div class="svg-icon svg-icon--light"><svg class="svg-icon__svg svg-icon__svg--twitter" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path class="svg-icon__fill" d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"/>
+</svg>
+</div></div><div class="sns__name">@hbsnow</div></a></div></div></div></div></div></div></footer></div><div class="progress" id="progress"><svg class="progress__svg" width="100%" height="4px" viewBox="0 0 100 4" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path class="progress__base" d="M 0,2 L 100,2" stroke-width="4" fill-opacity="0"/>
+  <path class="progress__bar" d="M 0,2 L 100,2" stroke-width="4" fill-opacity="0"/>
+</svg>
+</div></body></html>

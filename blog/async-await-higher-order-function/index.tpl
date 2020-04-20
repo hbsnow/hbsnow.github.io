@@ -1,0 +1,4 @@
+<header class="main__header"><div class="content-header"><div class="container"><h1 class="content-header__title" id="content-title">JavaScript の async/await を forEach で使ったらハマった話</h1><div class="content-header__metadata"><div class="content-header__date"><span class="content-header__data"><time class="content-header__published" datetime="2019-04-14">2019-04-14</time></span><hr class="content-header__sepalate"><span class="content-header__data"><time class="content-header__modified" datetime="2019-04-21">2019-04-21</time>
+に更新</span></div></div></div></div></header><div class="main__body"><div class="content-body"><div class="container"><p>https://hbsnow.dev/blog/js-async-await-higher-order-function/</p>
+<p>上記ページに移転しました。</p>
+</div></div></div>

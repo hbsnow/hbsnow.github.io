@@ -1,0 +1,1 @@
+<header class="main__header"><div class="content-header"><div class="container"><h1 class="content-header__title" id="content-title">About</h1></div></div></header><div class="main__body"><div class="content-body"><div class="container"><p><a href="https://hbsnow.dev">https://hbsnow.dev</a></p><p>移転しました。</p></div></div></div>

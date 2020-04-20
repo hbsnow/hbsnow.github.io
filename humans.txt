@@ -1,0 +1,22 @@
+hbsnow.github.io
+
+■ ABOUT
+
+このサイトはhbsnowのWebサイトやゲーム、アプリ制作についての技術メモなどを
+公開しているサイトです。
+
+私は以下のSNSをよく利用しています、よろしければフォローしてください！
+
+GitHub  : hbsnow
+Twitter : @hbsnow
+Qiita   : hbsnow
+
+
+
+■ TECHNOLOGY
+
+このサイトを作成するにあたり、使用されている技術は
+
+https://github.com/hbsnow/website
+
+にて公開されているソースコードで確認することができます。
